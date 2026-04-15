@@ -1,15 +1,47 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
 venv/
 .venv/
+env/
+.env/
+
+# Environment Variables
 .env
+.flaskenv
+
+# Flask specific
+instance/
+.webassets-cache
+
+# Database files (prevents committing your local SQLite DB)
+*.db
+*.sqlite
 *.sqlite3
-*.log
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Testing and Coverage (in case you add coverage later)
 .coverage
 htmlcov/
 .pytest_cache/
-.mypy_cache/

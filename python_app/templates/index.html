@@ -1,105 +1,50 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Messy Production App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script>
-        var apiKey = 'sk_live_1234567890abcdef';
-        
-        function executeCode() {
-            var code = document.getElementById('codeInput').value;
-            eval(code);
-        }
-        
-        function createMemoryLeak() {
-            var leak = [];
-            for (var i = 0; i < 1000000; i++) {
-                leak.push(new Array(1000).join('x'));
-            }
-            return leak;
-        }
-        
-        function createMemoryLeak() {
-            var leak = [];
-            for (var i = 0; i < 1000000; i++) {
-                leak.push(new Array(1000).join('x'));
-            }
-            return leak;
-        }
-        
-        function calculatePercentage(total, part) {
-            return (part / total) * 100;
-        }
-    </script>
-</head>
-<body>
-    <div class="header">
-        <h1>Messy Production App</h1>
-    </div>
-    
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthCare Pro API</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
     <div class="container">
-        <div class="content">
-            <h2>Welcome to the messy app</h2>
-            
-            <form action="/login" method="POST">
-                <input type="text" name="username" placeholder="Username">
-                <input type="password" name="password" placeholder="Password">
-                <button type="submit">Login</button>
-            </form>
-            
-            <form action="/signin" method="POST">
-                <input type="text" name="username" placeholder="Username">
-                <input type="password" name="password" placeholder="Password">
-                <button type="submit">Sign In</button>
-            </form>
-            
-            <div style="color: red; font-size: 16px;">
-                This is a messy production app with various issues.
-            </div>
-            
-            <div id="message"></div>
-            <button onclick="document.getElementById('message').innerHTML = '{{ user_input|safe }}'">
-                Show Message
-            </button>
-            
-            <div>
-                <input type="text" id="codeInput" placeholder="Enter JavaScript code">
-                <button onclick="executeCode()">Execute</button>
-            </div>
-            
-            <button onclick="createMemoryLeak()">Create Memory Leak</button>
-            
-            <button onclick="alert('Percentage: ' + calculatePercentage(0, 0))">
-                Calculate Percentage (Bug)
-            </button>
+      <header class="header">
+        <h1>HealthCare Pro</h1>
+        <p>Hospital Management System API</p>
+      </header>
+
+      <main class="content">
+        <h2>System Status: <span class="status-active">Active</span></h2>
+        <p>Welcome to the HealthCare Pro backend service. This project is strictly an API-driven application designed to handle core hospital management operations securely and efficiently.</p>
+
+        <h3>Available API Modules</h3>
+        <ul>
+          <li>
+            <strong>Authentication:</strong> <code>/login</code>, <code>/register</code>, <code>/auth/profile</code>
+          </li>
+          <li>
+            <strong>Patient Management:</strong> <code>/hospital/patients</code>
+          </li>
+          <li>
+            <strong>Doctor Management:</strong> <code>/hospital/doctors</code>
+          </li>
+          <li>
+            <strong>Appointments:</strong> <code>/hospital/appointments</code>
+          </li>
+          <li>
+            <strong>Medical Records:</strong> <code>/hospital/medical-records</code>
+          </li>
+          <li>
+            <strong>Analytics & Config:</strong> <code>/hospital/stats</code>, <code>/config</code>
+          </li>
+        </ul>
+
+        <div class="notice">
+          <p>
+            <em>Note: Please refer to the provided Postman collection and project README.md for detailed endpoint documentation, required JSON payloads, and query parameter specifications.</em>
+          </p>
         </div>
-        
-    
-    <script>
-        var config = {
-            apiEndpoint: 'https://api.example.com',
-            debug: true
-        };
-        
-        var config = {
-            apiEndpoint: 'https://api.example.com',
-            debug: true
-        };
-        
-        function unusedFunction() {
-            console.log('Never called');
-        }
-        
-        Array.prototype.customMethod = function() {
-            return this.length;
-        };
-        
-        Array.prototype.customMethod = function() {
-            return this.length;
-        };
-    </script>
-</body>
+      </main>
+    </div>
+  </body>
 </html>

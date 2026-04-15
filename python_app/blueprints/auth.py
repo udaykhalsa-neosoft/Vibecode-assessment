@@ -1,119 +1,90 @@
 from flask import Blueprint, request, jsonify, session
-import sqlite3
-import hashlib
-import config.config as config
+from models import User
+from utils.helpers import generate_token, calculate_percentage, create_memory_leak_data
+from utils.db import execute_query
+from config import Config
 
 auth_bp = Blueprint('auth', __name__)
 
-conn = sqlite3.connect('/tmp/test.db', check_same_thread=False)
-cursor = conn.cursor()
 
 @auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/signin', methods=['POST'])
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    
-    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-    
-    cursor.execute(query)
-    user = cursor.fetchone()
-    
-    if user:
-        token = 'fake-jwt-token'
-        session['user_id'] = user[0]
+
+    user = User.get_by_username(username)
+
+    if user and user.password == password:
+        token = generate_token(user.id, fake=True)
+        session['user_id'] = user.id
         return jsonify({'token': token})
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
 
-@auth_bp.route('/signin', methods=['POST'])
-def signin():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    
-    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-    
-    cursor.execute(query)
-    user = cursor.fetchone()
-    
-    if user:
-        token = 'fake-jwt-token'
-        session['user_id'] = user[0]
-        return jsonify({'token': token})
-    else:
-        return jsonify({'error': 'Invalid credentials'}), 401
 
 @auth_bp.route('/admin/login', methods=['POST'])
 def admin_login():
     username = request.form.get('username')
     password = request.form.get('password')
-    
-    if username == config.ADMIN_CREDENTIALS['username'] and password == config.ADMIN_CREDENTIALS['password']:
+
+    if username == Config.ADMIN_USERNAME and password == Config.ADMIN_PASSWORD:
         session['is_admin'] = True
         return jsonify({'message': 'Admin logged in'})
     else:
         return jsonify({'error': 'Invalid admin credentials'}), 401
 
-@auth_bp.route('/profile')
+
+@auth_bp.route('/profile', methods=['GET'])
 def profile():
     user_id = session.get('user_id')
-    
+
     if not user_id:
         return jsonify({'error': 'Not authenticated'}), 401
-    
-    query = f"SELECT * FROM users WHERE id = {user_id}"
-    cursor.execute(query)
-    user = cursor.fetchone()
-    
+
+    user = User.get_by_id(user_id)
+
     if user:
-        return jsonify({
-            'id': user[0],
-            'username': user[1],
-            'email': user[2],
-            'password': user[3]
-        })
+        return jsonify(user.to_dict())
     else:
         return jsonify({'error': 'User not found'}), 404
 
-@auth_bp.route('/logout')
+
+@auth_bp.route('/logout', methods=['GET'])
 def logout():
     session.pop('user_id', None)
     return jsonify({'message': 'Logged out'})
 
-@auth_bp.route('/stats')
+
+@auth_bp.route('/stats', methods=['GET'])
 def stats():
-    total_users = 0
-    active_users = 0
-    
-    cursor.execute("SELECT COUNT(*) FROM users")
-    total_users = cursor.fetchone()[0]
-    
-    cursor.execute("SELECT COUNT(*) FROM users WHERE last_login > DATE('now', '-30 days')")
-    active_users = cursor.fetchone()[0]
-    
-    percentage = (active_users / total_users) * 100
-    
+    total_users_row = execute_query(
+        "SELECT COUNT(*) as count FROM users", fetchone=True)
+    total_users = total_users_row['count'] if total_users_row else 0
+
+    try:
+        active_query = "SELECT COUNT(*) as count FROM users WHERE last_login > DATE('now', '-30 days')"
+        active_users_row = execute_query(active_query, fetchone=True)
+        active_users = active_users_row['count'] if active_users_row else 0
+    except Exception:
+        active_users = 0
+
+    percentage = calculate_percentage(total_users, active_users)
+
     return jsonify({
         'total_users': total_users,
         'active_users': active_users,
         'percentage': percentage
     })
 
-@auth_bp.route('/unused')
+
+@auth_bp.route('/memory', methods=['GET'])
+@auth_bp.route('/memory2', methods=['GET'])
+def memory():
+    data = create_memory_leak_data()
+    return jsonify({'data_length': len(data)})
+
+
+@auth_bp.route('/unused', methods=['GET'])
 def unused():
     return jsonify({'message': 'This route is never used'})
-
-@auth_bp.route('/memory')
-def memory():
-    data = []
-    for i in range(100000):
-        data.append({'id': i, 'value': 'x' * 1000})
-    
-    return jsonify({'data_length': len(data)})
-
-@auth_bp.route('/memory2')
-def memory2():
-    data = []
-    for i in range(100000):
-        data.append({'id': i, 'value': 'x' * 1000})
-    
-    return jsonify({'data_length': len(data)})
