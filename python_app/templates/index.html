@@ -3,47 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HealthCare Pro API</title>
+    <title>HealthCare Pro API Documentation</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="container">
       <header class="header">
-        <h1>HealthCare Pro</h1>
-        <p>Hospital Management System API</p>
+        <div class="header-content">
+          <h1>HealthCare Pro</h1>
+          <p>Hospital Management System API</p>
+        </div>
+        <div class="status-badge">
+          <span class="pulse"></span> System Active
+        </div>
       </header>
 
       <main class="content">
-        <h2>System Status: <span class="status-active">Active</span></h2>
-        <p>Welcome to the HealthCare Pro backend service. This project is strictly an API-driven application designed to handle core hospital management operations securely and efficiently.</p>
+        <section class="intro">
+          <p>Welcome to the HealthCare Pro backend service. This application is a strictly API-driven architecture designed to handle core hospital management operations securely and efficiently.</p>
+        </section>
 
-        <h3>Available API Modules</h3>
-        <ul>
-          <li>
-            <strong>Authentication:</strong> <code>/login</code>, <code>/register</code>, <code>/auth/profile</code>
-          </li>
-          <li>
-            <strong>Patient Management:</strong> <code>/hospital/patients</code>
-          </li>
-          <li>
-            <strong>Doctor Management:</strong> <code>/hospital/doctors</code>
-          </li>
-          <li>
-            <strong>Appointments:</strong> <code>/hospital/appointments</code>
-          </li>
-          <li>
-            <strong>Medical Records:</strong> <code>/hospital/medical-records</code>
-          </li>
-          <li>
-            <strong>Analytics & Config:</strong> <code>/hospital/stats</code>, <code>/config</code>
-          </li>
-        </ul>
+        <section class="api-modules">
+          <h2>Available API Modules</h2>
 
-        <div class="notice">
+          <div class="module-card">
+            <h3>Authentication & Users</h3>
+            <div class="endpoints">
+              <code>POST /login</code>
+              <code>POST /register</code>
+              <code>GET /auth/profile</code>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <h3>Patient Management</h3>
+            <div class="endpoints">
+              <code>GET /hospital/patients</code>
+              <code>POST /hospital/patients</code>
+              <code>GET /hospital/patients/&lt;id&gt;</code>
+              <code>PUT /hospital/patients/&lt;id&gt;</code>
+            </div>
+          </div>
+
+          <div class="module-card highlight">
+            <h3>Doctor Management <span class="new-badge">New Feature</span></h3>
+            <p class="feature-desc">Dynamically calculate available 1-hour time slots for any doctor on a given date.</p>
+            <div class="endpoints">
+              <code>GET /hospital/doctors</code>
+              <code>GET /hospital/doctors/&lt;id&gt;/availability?date=YYYY-MM-DD</code>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <h3>Appointments & Records</h3>
+            <div class="endpoints">
+              <code>GET /hospital/appointments</code>
+              <code>POST /hospital/appointments</code>
+              <code>GET /hospital/medical-records</code>
+            </div>
+          </div>
+
+          <div class="module-card">
+            <h3>Analytics & Config</h3>
+            <div class="endpoints">
+              <code>GET /hospital/stats</code>
+              <code>GET /config</code>
+            </div>
+          </div>
+        </section>
+
+        <footer class="notice">
           <p>
-            <em>Note: Please refer to the provided Postman collection and project README.md for detailed endpoint documentation, required JSON payloads, and query parameter specifications.</em>
+            <strong>Developer Note:</strong> Please refer to the provided Postman collection and project README.md for detailed endpoint documentation, required JSON payloads, and query parameter specifications.
           </p>
-        </div>
+        </footer>
       </main>
     </div>
   </body>
